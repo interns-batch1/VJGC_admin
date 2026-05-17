@@ -195,13 +195,21 @@ function AddProductContent() {
         return
       }
 
+      // Determine final image based on configuration: if image_url or video_url is explicitly in the config, use it (even if empty string)
+      let finalImage = "";
+      if (data && (data.video_url !== undefined || data.image_url !== undefined)) {
+        finalImage = data.video_url || data.image_url || "";
+      } else {
+        finalImage = data?.image || "";
+      }
+
       // --- CREATE or UPDATE ---
       const payload: any = {
         ...data,
         mainPage:   selectedPage,
         subSection: selectedSubpage,
         category:   selectedSectionName,
-        image:       data?.video_url   || data?.image_url   || data?.image || ""
+        image:       finalImage
       }
 
       if (action === "update_card" && cardId) {
@@ -236,15 +244,17 @@ function AddProductContent() {
           <p className="text-slate-500 font-medium">Manage hierarchical business content and card sections.</p>
         </div>
 
-        <div className="flex gap-3">
-          <Button variant="outline" className="border-slate-200" onClick={handleSaveAll.bind(null, "draft")} disabled={isSaving || !selectedSection}>
-            Save Draft
-          </Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200" onClick={handleSaveAll.bind(null, "published")} disabled={isSaving || !selectedSection}>
-            {isSaving ? <Loader2 className="mr-2 animate-spin h-4 w-4" /> : <Send className="mr-2 h-4 w-4" />}
-            Publish to Website
-          </Button>
-        </div>
+        {selectedSection && !["cards", "news"].includes(selectedSection.type) && (
+          <div className="flex gap-3">
+            <Button variant="outline" className="border-slate-200" onClick={handleSaveAll.bind(null, "draft")} disabled={isSaving}>
+              Save Draft
+            </Button>
+            <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200" onClick={handleSaveAll.bind(null, "published")} disabled={isSaving}>
+              {isSaving ? <Loader2 className="mr-2 animate-spin h-4 w-4" /> : <Send className="mr-2 h-4 w-4" />}
+              Publish to Website
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-8 lg:grid-cols-12">
