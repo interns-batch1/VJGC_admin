@@ -44,6 +44,7 @@ const FIELD_CONFIG: any = {
   cards: [
     { id: "title", label: "Card Title", type: "text" },
     { id: "description", label: "Description", type: "textarea" },
+    { id: "video_url", label: "Video Background (URL)", type: "text" },
     { id: "image_url", label: "Card Image", type: "image" },
   ],
   news: [
@@ -51,6 +52,7 @@ const FIELD_CONFIG: any = {
     { id: "author", label: "Author", type: "text" },
     { id: "date", label: "Date", type: "text" },
     { id: "description", label: "Description", type: "textarea" },
+    { id: "video_url", label: "Video Background (URL)", type: "text" },
     { id: "image_url", label: "Feature Image", type: "image" },
   ],
   text: [
@@ -59,6 +61,7 @@ const FIELD_CONFIG: any = {
     { id: "content", label: "Content", type: "textarea" },
     { id: "author", label: "Author/Source", type: "text" },
     { id: "role", label: "Role/Tag", type: "text" },
+    { id: "video_url", label: "Video Background (URL)", type: "text" },
   ]
 }
 
@@ -198,7 +201,7 @@ function AddProductContent() {
         mainPage:   selectedPage,
         subSection: selectedSubpage,
         category:   selectedSectionName,
-        image:       data?.image_url   || data?.image || ""
+        image:       data?.video_url   || data?.image_url   || data?.image || ""
       }
 
       if (action === "update_card" && cardId) {
@@ -407,7 +410,19 @@ function AddProductContent() {
                                   <Button
                                     variant="outline"
                                     className="h-10 rounded-xl border-slate-200 hover:bg-slate-50 px-6 font-bold transition-all"
-                                    onClick={() => { setEditingCardId(item._id || item.id); setCardFormData(item); setSelectedAction("edit_single") }}
+                                    onClick={() => {
+                                      const editData = { ...item };
+                                      if (editData.image) {
+                                        if (editData.image.toLowerCase().endsWith('.mp4') || editData.image.includes('/video/upload/')) {
+                                          editData.video_url = editData.image;
+                                        } else {
+                                          editData.image_url = editData.image;
+                                        }
+                                      }
+                                      setEditingCardId(item._id || item.id);
+                                      setCardFormData(editData);
+                                      setSelectedAction("edit_single");
+                                    }}
                                   >
                                     Edit
                                   </Button>
