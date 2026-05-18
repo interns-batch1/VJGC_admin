@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 
 export default function MainFooter() {
-  const BASE_URL = "http://localhost:5006";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5006/api';
+  const BASE_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : 'http://127.0.0.1:5006';
 
   return (
     <footer className="w-full bg-[#f5f7f8] border-t border-[#e5e7ea] font-sans">
