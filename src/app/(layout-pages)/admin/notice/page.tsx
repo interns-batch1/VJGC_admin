@@ -40,13 +40,13 @@ export default function NoticePage() {
 
       if (noticeItems && noticeItems.length > 0) {
         const notice = noticeItems[0];
-        setContentDoc(Array.isArray(data) ? { content: data } : data);
+        setContentDoc(notice);
         setForm({
           title: notice.title || 'Important Notice',
           description: notice.description || ''
         });
       } else {
-        setContentDoc(Array.isArray(data) ? { content: [] } : data);
+        setContentDoc(null);
         setForm({ title: 'Important Notice', description: '' });
       }
     } catch (error) {
@@ -71,8 +71,15 @@ export default function NoticePage() {
         isActive: true
       };
 
-      // Use the CMS upsert endpoint
-      await api.put('/admin/cms/content', payload);
+      const docId = contentDoc?.id || contentDoc?._id;
+      if (docId) {
+        // Use ID-based update
+        await api.put(`/admin/cms/content/${docId}`, payload);
+      } else {
+        // Use the general CMS upsert endpoint
+        await api.put('/admin/cms/content', payload);
+      }
+      
       toast.success('Notice saved as Draft');
       fetchNotice();
     } catch (error: any) {
@@ -86,7 +93,6 @@ export default function NoticePage() {
   const handlePublish = async () => {
     setSaving(true);
     try {
-      // 1. First ensure content is saved with latest text
       const payload = {
         mainPage: 'home',
         subSection: '',
@@ -97,17 +103,22 @@ export default function NoticePage() {
         status: 'published',
         isActive: true
       };
-      await api.put('/admin/cms/content', payload);
 
-      // 2. Fetch latest to get ID
-      const data = await api.get('/content/?mainPage=home&category=Notice');
-      const noticeItems = Array.isArray(data) ? data : (data?.content || []);
-      const docId = noticeItems[0]?.id || noticeItems[0]?._id;
-
-      if (!docId) throw new Error("Document ID missing");
-
-      // 3. Publish
-      await api.put(`/admin/cms/content/${docId}/publish`, {});
+      const docId = contentDoc?.id || contentDoc?._id;
+      if (docId) {
+        // Use ID-based update
+        await api.put(`/admin/cms/content/${docId}`, payload);
+        await api.put(`/admin/cms/content/${docId}/publish`, {});
+      } else {
+        // Use general upsert, then fetch latest to get ID to publish
+        await api.put('/admin/cms/content', payload);
+        const data = await api.get('/content/?mainPage=home&category=Notice');
+        const noticeItems = Array.isArray(data) ? data : (data?.content || []);
+        const newDocId = noticeItems[0]?.id || noticeItems[0]?._id;
+        if (newDocId) {
+          await api.put(`/admin/cms/content/${newDocId}/publish`, {});
+        }
+      }
       
       toast.success('Notice published successfully!');
       fetchNotice();
