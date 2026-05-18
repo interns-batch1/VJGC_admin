@@ -65,6 +65,17 @@ const FIELD_CONFIG: any = {
   ]
 }
 
+const resolveImageUrl = (url: string) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) {
+    return url;
+  }
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5006/api';
+  const BACKEND_BASE = API_BASE_URL.endsWith('/api') ? API_BASE_URL.slice(0, -4) : 'http://127.0.0.1:5006';
+  const cleanUrl = url.startsWith("/") ? url : `/${url}`;
+  return `${BACKEND_BASE}${cleanUrl}`;
+}
+
 export default function AddProduct() {
   return (
     <Suspense fallback={<div className="flex items-center justify-center p-20"><Loader2 className="animate-spin" /></div>}>
@@ -298,6 +309,7 @@ function AddProductContent() {
                           <SelectItem value="Our Journey">Our Journey</SelectItem>
                           <SelectItem value="Leadership">Leadership</SelectItem>
                           <SelectItem value="Awards">Awards</SelectItem>
+                          <SelectItem value="Foundation">Foundation</SelectItem>
                         </>
                       )}
                       {selectedPage === "Business Verticals" && (
@@ -408,7 +420,7 @@ function AddProductContent() {
                                 <div className="flex items-center gap-6">
                                   {((item.image_url && item.image_url.trim() !== "") || (item.image && item.image.trim() !== "")) && (
                                     <div className="h-16 w-16 rounded-2xl overflow-hidden border-2 border-white shadow-lg flex-shrink-0">
-                                      <img src={item.image_url || item.image} className="h-full w-full object-cover" onError={(e) => (e.currentTarget.parentElement!.style.display = 'none')} />
+                                      <img src={resolveImageUrl(item.image_url || item.image)} className="h-full w-full object-cover" onError={(e) => (e.currentTarget.parentElement!.style.display = 'none')} />
                                     </div>
                                   )}
                                   <div>
@@ -528,7 +540,7 @@ function ImageUploader({ value, onChange }: { value: string; onChange: (url: str
     <div className="space-y-4">
       {value ? (
         <div className="relative group w-full aspect-video rounded-3xl overflow-hidden border-4 border-white shadow-2xl">
-          <img src={value} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+          <img src={resolveImageUrl(value)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
           <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <Button variant="destructive" className="rounded-full" size="sm" onClick={() => onChange("")}><Trash2 className="mr-2 h-4 w-4" /> Replace Image</Button>
           </div>

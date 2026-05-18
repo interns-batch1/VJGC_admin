@@ -82,7 +82,8 @@ export default function CMSPage() {
         { id: 'about-group', label: 'About Group' },
         { id: 'journey', label: 'Our Journey' },
         { id: 'leadership', label: 'Leadership' },
-        { id: 'awards', label: 'Awards' }
+        { id: 'awards', label: 'Awards' },
+        { id: 'foundation', label: 'Foundation' }
       ]
     },
     {
