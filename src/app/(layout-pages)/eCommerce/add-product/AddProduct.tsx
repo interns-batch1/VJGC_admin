@@ -288,6 +288,7 @@ function AddProductContent() {
                     <SelectItem value="home">Home</SelectItem>
                     <SelectItem value="About Us">About Us</SelectItem>
                     <SelectItem value="Business Verticals">Business Verticals</SelectItem>
+                    <SelectItem value="Sustainability">Sustainability</SelectItem>
                     <SelectItem value="Newsroom">Newsroom</SelectItem>
                     <SelectItem value="Blog">Blog</SelectItem>
                   </SelectContent>
@@ -295,7 +296,7 @@ function AddProductContent() {
               </div>
 
               {/* SUBPAGE */}
-              {selectedPage && ["About Us", "Business Verticals", "Newsroom"].includes(selectedPage) && (
+              {selectedPage && ["About Us", "Business Verticals", "Sustainability", "Newsroom"].includes(selectedPage) && (
                 <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
                   <Label className="text-xs font-black uppercase text-slate-400 tracking-widest">Sub-Section</Label>
                   <Select value={selectedSubpage} onValueChange={(v) => { setSelectedSubpage(v); setSelectedSectionName(""); setSelectedAction("") }}>
@@ -324,6 +325,26 @@ function AddProductContent() {
                           <SelectItem value="Green Energy & Solar Manufacturing">Green Energy & Solar Manufacturing</SelectItem>
                           <SelectItem value="Logistics Services">Logistics Services</SelectItem>
                           <SelectItem value="Travel & Rentals">Travel & Rentals</SelectItem>
+                        </>
+                      )}
+                      {selectedPage === "Sustainability" && (
+                        <>
+                          <SelectItem value="Main landing">Main landing</SelectItem>
+                          <SelectItem value="Digital Transformation & IT Consulting">Digital Transformation & IT Consulting</SelectItem>
+                          <SelectItem value="Cloud, Hosting & Infrastructure">Cloud, Hosting & Infrastructure</SelectItem>
+                          <SelectItem value="Renewable Energy Solutions">Renewable Energy Solutions</SelectItem>
+                          <SelectItem value="Logistics & Trade Enablement">Logistics & Trade Enablement</SelectItem>
+                          <SelectItem value="Education & Skill Development">Education & Skill Development</SelectItem>
+                          <SelectItem value="Tree Plantation & Green Cover">Tree Plantation & Green Cover</SelectItem>
+                          <SelectItem value="Eco-conscious Technology Solutions">Eco-conscious Technology Solutions</SelectItem>
+                          <SelectItem value="Renewable Energy Adoption">Renewable Energy Adoption</SelectItem>
+                          <SelectItem value="Sustainable Business Practices">Sustainable Business Practices</SelectItem>
+                          <SelectItem value="Educational Support">Educational Support</SelectItem>
+                          <SelectItem value="Financial & Material Aid">Financial & Material Aid</SelectItem>
+                          <SelectItem value="Skill-Building Programs">Skill-Building Programs</SelectItem>
+                          <SelectItem value="Rural & Semi-Urban Engagement">Rural & Semi-Urban Engagement</SelectItem>
+                          <SelectItem value="Awareness Programs">Awareness Programs</SelectItem>
+                          <SelectItem value="Local Infrastructure Support">Local Infrastructure Support</SelectItem>
                         </>
                       )}
                       {selectedPage === "Newsroom" && <SelectItem value="Media Release">Media Release</SelectItem>}

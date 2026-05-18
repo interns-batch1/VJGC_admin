@@ -100,6 +100,26 @@ export default function CMSPage() {
         { id: 'travel-rentals', label: 'Travel & Rentals' }
       ]
     },
+    {
+      id: 'sustainability', label: 'Sustainability', subpages: [
+        { id: 'Main landing', label: 'Main landing' },
+        { id: 'Digital Transformation & IT Consulting', label: 'Digital Transformation & IT Consulting' },
+        { id: 'Cloud, Hosting & Infrastructure', label: 'Cloud, Hosting & Infrastructure' },
+        { id: 'Renewable Energy Solutions', label: 'Renewable Energy Solutions' },
+        { id: 'Logistics & Trade Enablement', label: 'Logistics & Trade Enablement' },
+        { id: 'Education & Skill Development', label: 'Education & Skill Development' },
+        { id: 'Tree Plantation & Green Cover', label: 'Tree Plantation & Green Cover' },
+        { id: 'Eco-conscious Technology Solutions', label: 'Eco-conscious Technology Solutions' },
+        { id: 'Renewable Energy Adoption', label: 'Renewable Energy Adoption' },
+        { id: 'Sustainable Business Practices', label: 'Sustainable Business Practices' },
+        { id: 'Educational Support', label: 'Educational Support' },
+        { id: 'Financial & Material Aid', label: 'Financial & Material Aid' },
+        { id: 'Skill-Building Programs', label: 'Skill-Building Programs' },
+        { id: 'Rural & Semi-Urban Engagement', label: 'Rural & Semi-Urban Engagement' },
+        { id: 'Awareness Programs', label: 'Awareness Programs' },
+        { id: 'Local Infrastructure Support', label: 'Local Infrastructure Support' }
+      ]
+    },
     { id: 'newsroom', label: 'Newsroom', subpages: [{ id: 'media-release', label: 'Media Release' }] }
   ];
 
@@ -141,7 +161,7 @@ export default function CMSPage() {
     if (!selectedSection) return;
     try {
       setLoading(true);
-      const mPage = selectedPage === 'business' ? 'Business Verticals' : (selectedPage === 'about' ? 'About Us' : selectedPage);
+      const mPage = selectedPage === 'business' ? 'Business Verticals' : (selectedPage === 'about' ? 'About Us' : (selectedPage === 'sustainability' ? 'Sustainability' : selectedPage));
       const url = `/content?mainPage=${mPage}&subSection=${selectedSubpage || ''}&category=${selectedSection.label}`;
       const data = await api.get(url);
 
@@ -180,7 +200,7 @@ export default function CMSPage() {
     setSaving(true);
     try {
       const payload: any = {
-        mainPage: selectedPage === 'business' ? 'Business Verticals' : selectedPage,
+        mainPage: selectedPage === 'business' ? 'Business Verticals' : (selectedPage === 'sustainability' ? 'Sustainability' : selectedPage),
         subSection: selectedSubpage,
         category: selectedSection.label,
         type: selectedSection.type,
@@ -249,7 +269,7 @@ export default function CMSPage() {
       } else {
         // Use the universal endpoint for new cards
         const payload = {
-          mainPage: selectedPage === 'business' ? 'Business Verticals' : selectedPage,
+          mainPage: selectedPage === 'business' ? 'Business Verticals' : (selectedPage === 'sustainability' ? 'Sustainability' : selectedPage),
           subSection: selectedSubpage,
           category: selectedSection?.label,
           title: cardForm.title,
