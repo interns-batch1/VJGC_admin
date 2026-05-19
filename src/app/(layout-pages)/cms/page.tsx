@@ -162,7 +162,7 @@ export default function CMSPage() {
     try {
       setLoading(true);
       const mPage = selectedPage === 'business' ? 'Business Verticals' : (selectedPage === 'about' ? 'About Us' : (selectedPage === 'sustainability' ? 'Sustainability' : selectedPage));
-      const url = `/content?mainPage=${mPage}&subSection=${selectedSubpage || ''}&category=${selectedSection.label}`;
+      const url = `/admin/cms/content?mainPage=${mPage}&subSection=${selectedSubpage || ''}&category=${selectedSection.label}`;
       const data = await api.get(url);
 
       if (data && data.content && data.content.length > 0) {
@@ -221,7 +221,7 @@ export default function CMSPage() {
         payload.content = contentDoc?.content || [];
       }
 
-      await api.put('/content', payload);
+      await api.put('/admin/cms/content', payload);
       toast.success('Section saved locally (Draft)');
       fetchContent();
     } catch (error) {
@@ -276,7 +276,7 @@ export default function CMSPage() {
           description: cardForm.description,
           image: cardForm.image_url // Unified image field
         };
-        await api.post('/content', payload);
+        await api.post('/admin/cms/content', payload);
         toast.success('Card added');
       }
       setIsCardModalOpen(false);
