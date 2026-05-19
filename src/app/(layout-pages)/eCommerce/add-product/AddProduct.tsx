@@ -130,7 +130,7 @@ function AddProductContent() {
           setContentId(res._id || res.id)
           // Always treat as array for unified Create/Update/Delete flow
           let content = res.content || []
-          
+
           if (!Array.isArray(content) && content && typeof content === 'object') {
             if (content.items) {
               content = content.items
@@ -141,7 +141,7 @@ function AddProductContent() {
 
           setFormData(content)
           setPublished(res.status === "published")
-          
+
           // Auto-select "update" if data exists and no action is chosen
           if (!selectedAction && content.length > 0) {
             setSelectedAction("update")
@@ -217,10 +217,10 @@ function AddProductContent() {
       // --- CREATE or UPDATE ---
       const payload: any = {
         ...data,
-        mainPage:   selectedPage,
+        mainPage: selectedPage,
         subSection: selectedSubpage,
-        category:   selectedSectionName,
-        image:       finalImage
+        category: selectedSectionName,
+        image: finalImage
       }
 
       if (action === "update_card" && cardId) {
@@ -417,124 +417,124 @@ function AddProductContent() {
             </div>
           ) : (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div className="space-y-8">
-                  {/* UPDATE / DELETE LIST */}
-                  {(selectedAction === "update" || selectedAction === "delete") && (
-                    <Card className="border-slate-100 shadow-xl rounded-3xl overflow-hidden">
-                      <div className="px-8 py-6 border-b bg-slate-50/50 flex items-center justify-between">
-                        <CardTitle className="text-xl font-black text-slate-900">
-                          {selectedAction === 'update' ? 'Stored Records' : 'Removal Zone'}
-                        </CardTitle>
-                        <Badge className={selectedAction === 'update' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-rose-50 text-rose-700 border-rose-100'}>
-                          {Array.isArray(formData) ? formData.length : 0} Items
-                        </Badge>
-                      </div>
-                      <CardContent className="p-0">
-                        <div className="divide-y divide-slate-100">
-                          {(!formData || !Array.isArray(formData) || formData.length === 0) ? (
-                            <div className="p-20 text-center">
-                              <p className="text-slate-400 font-bold">No entries found for this section.</p>
-                            </div>
-                          ) : (
-                            formData.map((item: any, idx: number) => (
-                              <div key={item._id || item.id || idx} className="p-8 flex items-center justify-between group hover:bg-slate-50 transition-all">
-                                <div className="flex items-center gap-6">
-                                  {((item.image_url && item.image_url.trim() !== "") || (item.image && item.image.trim() !== "")) && (
-                                    <div className="h-16 w-16 rounded-2xl overflow-hidden border-2 border-white shadow-lg flex-shrink-0">
-                                      <img src={resolveImageUrl(item.image_url || item.image)} className="h-full w-full object-cover" onError={(e) => (e.currentTarget.parentElement!.style.display = 'none')} />
-                                    </div>
-                                  )}
-                                  <div>
-                                    <h4 className="font-black text-slate-900 text-lg leading-tight">{item.title || item.heading || 'Untitled Entry'}</h4>
-                                    <p className="text-slate-500 text-sm mt-1 max-w-lg line-clamp-1">{item.description || item.subtitle || item.content || 'No preview text.'}</p>
+              <div className="space-y-8">
+                {/* UPDATE / DELETE LIST */}
+                {(selectedAction === "update" || selectedAction === "delete") && (
+                  <Card className="border-slate-100 shadow-xl rounded-3xl overflow-hidden">
+                    <div className="px-8 py-6 border-b bg-slate-50/50 flex items-center justify-between">
+                      <CardTitle className="text-xl font-black text-slate-900">
+                        {selectedAction === 'update' ? 'Stored Records' : 'Removal Zone'}
+                      </CardTitle>
+                      <Badge className={selectedAction === 'update' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-rose-50 text-rose-700 border-rose-100'}>
+                        {Array.isArray(formData) ? formData.length : 0} Items
+                      </Badge>
+                    </div>
+                    <CardContent className="p-0">
+                      <div className="divide-y divide-slate-100">
+                        {(!formData || !Array.isArray(formData) || formData.length === 0) ? (
+                          <div className="p-20 text-center">
+                            <p className="text-slate-400 font-bold">No entries found for this section.</p>
+                          </div>
+                        ) : (
+                          formData.map((item: any, idx: number) => (
+                            <div key={item._id || item.id || idx} className="p-8 flex items-center justify-between group hover:bg-slate-50 transition-all">
+                              <div className="flex items-center gap-6">
+                                {((item.image_url && item.image_url.trim() !== "") || (item.image && item.image.trim() !== "")) && (
+                                  <div className="h-16 w-16 rounded-2xl overflow-hidden border-2 border-white shadow-lg flex-shrink-0">
+                                    <img src={resolveImageUrl(item.image_url || item.image)} className="h-full w-full object-cover" onError={(e) => (e.currentTarget.parentElement!.style.display = 'none')} />
                                   </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <Button
-                                    variant="outline"
-                                    className="h-10 rounded-xl border-slate-200 hover:bg-slate-50 px-6 font-bold transition-all"
-                                    onClick={() => {
-                                      const editData = { ...item };
-                                      if (editData.image) {
-                                        if (editData.image.toLowerCase().endsWith('.mp4') || editData.image.includes('/video/upload/')) {
-                                          editData.video_url = editData.image;
-                                        } else {
-                                          editData.image_url = editData.image;
-                                        }
-                                      }
-                                      setEditingCardId(item._id || item.id);
-                                      setCardFormData(editData);
-                                      setSelectedAction("edit_single");
-                                    }}
-                                  >
-                                    Edit
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    className="h-10 w-10 p-0 flex items-center justify-center rounded-xl border-[#f0b0b0] bg-white hover:bg-[#fff0f0] transition-all"
-                                    onClick={() => handleCardAction("delete_card", item._id || item.id)}
-                                  >
-                                    <Trash2 size={18} className="text-[#c0392b]" />
-                                  </Button>
+                                )}
+                                <div>
+                                  <h4 className="font-black text-slate-900 text-lg leading-tight">{item.title || item.heading || 'Untitled Entry'}</h4>
+                                  <p className="text-slate-500 text-sm mt-1 max-w-lg line-clamp-1">{item.description || item.subtitle || item.content || 'No preview text.'}</p>
                                 </div>
                               </div>
-                            ))
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="outline"
+                                  className="h-10 rounded-xl border-slate-200 hover:bg-slate-50 px-6 font-bold transition-all"
+                                  onClick={() => {
+                                    const editData = { ...item };
+                                    if (editData.image) {
+                                      if (editData.image.toLowerCase().endsWith('.mp4') || editData.image.includes('/video/upload/')) {
+                                        editData.video_url = editData.image;
+                                      } else {
+                                        editData.image_url = editData.image;
+                                      }
+                                    }
+                                    setEditingCardId(item._id || item.id);
+                                    setCardFormData(editData);
+                                    setSelectedAction("edit_single");
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  className="h-10 w-10 p-0 flex items-center justify-center rounded-xl border-[#f0b0b0] bg-white hover:bg-[#fff0f0] transition-all"
+                                  onClick={() => handleCardAction("delete_card", item._id || item.id)}
+                                >
+                                  <Trash2 size={18} className="text-[#c0392b]" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
-                  {/* CREATE OR EDIT SINGLE FORM */}
-                  {(selectedAction === "create" || selectedAction === "edit_single") && (
-                    <Card className="border-slate-100 shadow-2xl rounded-3xl overflow-hidden animate-in zoom-in-95">
-                      <div className="px-8 py-6 border-b bg-indigo-600 flex items-center justify-between text-white">
-                        <CardTitle className="text-xl font-black">
-                          {selectedAction === 'edit_single' ? 'Modify Entry' : 'New Entry Creation'}
-                        </CardTitle>
-                        <Button variant="ghost" className="text-white hover:bg-white/10 rounded-full" onClick={() => setSelectedAction("update")}>
-                          <X className="h-5 w-5" />
+                {/* CREATE OR EDIT SINGLE FORM */}
+                {(selectedAction === "create" || selectedAction === "edit_single") && (
+                  <Card className="border-slate-100 shadow-2xl rounded-3xl overflow-hidden animate-in zoom-in-95">
+                    <div className="px-8 py-6 border-b bg-indigo-600 flex items-center justify-between text-white">
+                      <CardTitle className="text-xl font-black">
+                        {selectedAction === 'edit_single' ? 'Modify Entry' : 'New Entry Creation'}
+                      </CardTitle>
+                      <Button variant="ghost" className="text-white hover:bg-white/10 rounded-full" onClick={() => setSelectedAction("update")}>
+                        <X className="h-5 w-5" />
+                      </Button>
+                    </div>
+                    <CardContent className="p-10 space-y-8">
+                      {FIELD_CONFIG[selectedSection.type].map((field: any) => (
+                        <div key={field.id} className="space-y-3">
+                          <Label className="text-xs font-black uppercase text-slate-400 tracking-widest">{field.label}</Label>
+                          {field.type === "text" && <Input className="h-12 border-slate-200" value={cardFormData[field.id] || ""} onChange={(e) => setCardFormData({ ...cardFormData, [field.id]: e.target.value })} />}
+                          {field.type === "textarea" && <Textarea rows={5} className="border-slate-200" value={cardFormData[field.id] || ""} onChange={(e) => setCardFormData({ ...cardFormData, [field.id]: e.target.value })} />}
+                          {field.type === "image" && <ImageUploader value={cardFormData[field.id]} onChange={(url) => setCardFormData({ ...cardFormData, [field.id]: url })} />}
+                        </div>
+                      ))}
+                      <div className="flex justify-end gap-4 pt-6">
+                        <Button variant="ghost" className="rounded-full px-8" onClick={() => setSelectedAction("update")}>Discard</Button>
+                        <Button
+                          className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-10 shadow-lg shadow-indigo-100 font-bold"
+                          onClick={() => handleCardAction(editingCardId ? "update_card" : "create_card", editingCardId || undefined, cardFormData)}
+                          disabled={isSaving}
+                        >
+                          {isSaving && <Loader2 className="mr-2 animate-spin h-4 w-4" />}
+                          {editingCardId ? 'Save Changes' : 'Create Entry'}
                         </Button>
                       </div>
-                      <CardContent className="p-10 space-y-8">
-                        {FIELD_CONFIG[selectedSection.type].map((field: any) => (
-                          <div key={field.id} className="space-y-3">
-                            <Label className="text-xs font-black uppercase text-slate-400 tracking-widest">{field.label}</Label>
-                            {field.type === "text" && <Input className="h-12 border-slate-200" value={cardFormData[field.id] || ""} onChange={(e) => setCardFormData({ ...cardFormData, [field.id]: e.target.value })} />}
-                            {field.type === "textarea" && <Textarea rows={5} className="border-slate-200" value={cardFormData[field.id] || ""} onChange={(e) => setCardFormData({ ...cardFormData, [field.id]: e.target.value })} />}
-                            {field.type === "image" && <ImageUploader value={cardFormData[field.id]} onChange={(url) => setCardFormData({ ...cardFormData, [field.id]: url })} />}
-                          </div>
-                        ))}
-                        <div className="flex justify-end gap-4 pt-6">
-                          <Button variant="ghost" className="rounded-full px-8" onClick={() => setSelectedAction("update")}>Discard</Button>
-                          <Button
-                            className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-10 shadow-lg shadow-indigo-100 font-bold"
-                            onClick={() => handleCardAction(editingCardId ? "update_card" : "create_card", editingCardId || undefined, cardFormData)}
-                            disabled={isSaving}
-                          >
-                            {isSaving && <Loader2 className="mr-2 animate-spin h-4 w-4" />}
-                            {editingCardId ? 'Save Changes' : 'Create Entry'}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
+                    </CardContent>
+                  </Card>
+                )}
 
-                  {/* NO ACTION SELECTED FALLBACK */}
-                  {!selectedAction && (
-                    <div className="flex flex-col items-center justify-center p-20 bg-indigo-50/30 rounded-3xl border border-indigo-100 border-dashed">
-                      <ArrowRight className="h-12 w-12 text-indigo-200 mb-6" />
-                      <h4 className="text-indigo-900 font-black text-xl">Ready to Manage</h4>
-                      <p className="text-indigo-600/60 font-medium mt-2 text-center">Choose an action from the "Management Mode" menu on the left to start editing this section.</p>
-                    </div>
-                  )}
-                </div>
+                {/* NO ACTION SELECTED FALLBACK */}
+                {!selectedAction && (
+                  <div className="flex flex-col items-center justify-center p-20 bg-indigo-50/30 rounded-3xl border border-indigo-100 border-dashed">
+                    <ArrowRight className="h-12 w-12 text-indigo-200 mb-6" />
+                    <h4 className="text-indigo-900 font-black text-xl">Ready to Manage</h4>
+                    <p className="text-indigo-600/60 font-medium mt-2 text-center">Choose an action from the "Management Mode" menu on the left to start editing this section.</p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
-    )
+    </div>
+  )
 }
 
 function ImageUploader({ value, onChange }: { value: string; onChange: (url: string) => void }) {
